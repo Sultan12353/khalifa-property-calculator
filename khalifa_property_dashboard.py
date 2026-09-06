@@ -125,7 +125,7 @@ with middle:
     buying_costs = st.number_input(
         "Legal, survey and buying costs",
         min_value=0.0,
-        value=0.0,
+        value=6000,
         step=500.0
     )
 
@@ -140,7 +140,7 @@ with right:
     selling_costs = st.number_input(
         "Selling costs",
         min_value=0.0,
-        value=0.0,
+        value=5000.0,
         step=500.0
     )
 
