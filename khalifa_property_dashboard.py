@@ -103,52 +103,65 @@ with st.sidebar:
     contingency_rate = st.slider("Renovation contingency", 0.0, 25.0, 12.0, 1.0)
     st.caption("Tax treatment depends on ownership and activity. Confirm it with a UK accountant.")
 
-st.subheader("Enter the property figures")
+st.subheader("Adjust the property figures")
+
 left, middle, right = st.columns(3)
 
 with left:
-    purchase_price = st.number_input(
+    purchase_price = st.slider(
         "Purchase price",
-        min_value=0.0,
-        value=0.0,
-        step=5_000.0
+        min_value=0,
+        max_value=2000000,
+        value=0,
+        step=5000,
+        format="£%d"
     )
 
-    renovation = st.number_input(
+    renovation = st.slider(
         "Renovation budget",
-        min_value=0.0,
-        value=0.0,
-        step=1_000.0
+        min_value=0,
+        max_value=500000,
+        value=0,
+        step=5000,
+        format="£%d"
     )
 
 with middle:
-    buying_costs = st.number_input(
-        "Legal, survey and buying costs",
-        min_value=0.0,
-        value=6000,
-        step=500.0
+    buying_costs = st.slider(
+        "Buying costs",
+        min_value=0,
+        max_value=50000,
+        value=7000,
+        step=500,
+        format="£%d"
     )
 
-    finance_costs = st.number_input(
-        "Holding costs: council tax, insurance and utilities",
-        min_value=0.0,
-        value=3_000.0,
-        step=500.0
+    finance_costs = st.slider(
+        "Holding costs",
+        min_value=0,
+        max_value=50000,
+        value=3000,
+        step=500,
+        format="£%d"
     )
 
 with right:
-    selling_costs = st.number_input(
+    selling_costs = st.slider(
         "Selling costs",
-        min_value=0.0,
-        value=5000.0,
-        step=500.0
+        min_value=0,
+        max_value=50000,
+        value=7000,
+        step=500,
+        format="£%d"
     )
 
-    selling_price = st.number_input(
+    selling_price = st.slider(
         "Expected selling price",
-        min_value=0.0,
-        value=0.0,
-        step=5_000.0
+        min_value=0,
+        max_value=3000000,
+        value=0,
+        step=5000,
+        format="£%d"
     )
 sdlt = calculate_sdlt(purchase_price, additional_property)
 contingency = renovation * contingency_rate / 100
