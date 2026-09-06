@@ -107,17 +107,49 @@ st.subheader("Enter the property figures")
 left, middle, right = st.columns(3)
 
 with left:
-    purchase_price = st.number_input("Purchase price", min_value=0.0, value=300_000.0, step=5_000.0)
-    renovation = st.number_input("Renovation budget", min_value=0.0, value=45_000.0, step=1_000.0)
+    purchase_price = st.number_input(
+        "Purchase price",
+        min_value=0.0,
+        value=0.0,
+        step=5_000.0
+    )
+
+    renovation = st.number_input(
+        "Renovation budget",
+        min_value=0.0,
+        value=0.0,
+        step=1_000.0
+    )
 
 with middle:
-    buying_costs = st.number_input("Legal, survey and buying costs", min_value=0.0, value=6_000.0, step=500.0)
-    finance_costs = st.number_input("Finance and holding costs", min_value=0.0, value=12_000.0, step=500.0)
+    buying_costs = st.number_input(
+        "Legal, survey and buying costs",
+        min_value=0.0,
+        value=0.0,
+        step=500.0
+    )
+
+    finance_costs = st.number_input(
+        "Holding costs: council tax, insurance and utilities",
+        min_value=0.0,
+        value=3_000.0,
+        step=500.0
+    )
 
 with right:
-    selling_costs = st.number_input("Selling costs", min_value=0.0, value=7_500.0, step=500.0)
-    selling_price = st.number_input("Expected selling price", min_value=0.0, value=450_000.0, step=5_000.0)
+    selling_costs = st.number_input(
+        "Selling costs",
+        min_value=0.0,
+        value=0.0,
+        step=500.0
+    )
 
+    selling_price = st.number_input(
+        "Expected selling price",
+        min_value=0.0,
+        value=0.0,
+        step=5_000.0
+    )
 sdlt = calculate_sdlt(purchase_price, additional_property)
 contingency = renovation * contingency_rate / 100
 total_cost = purchase_price + sdlt + renovation + contingency + buying_costs + finance_costs + selling_costs
