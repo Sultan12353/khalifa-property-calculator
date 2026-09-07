@@ -7,7 +7,45 @@ st.set_page_config(
     page_icon="🏠",
     layout="wide",
 )
+st.markdown(
+    """
+    <style>
+    div[data-testid="stSliderThumbValue"] {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        padding: 3px 6px !important;
+        min-width: 45px !important;
+        transition: all 0.15s ease-in-out !important;
+    }
 
+    div[data-testid="stSlider"]:has([role="slider"]:active)
+    div[data-testid="stSliderThumbValue"] {
+        font-size: 27px !important;
+        font-weight: 900 !important;
+        color: white !important;
+        background-color: #176B87 !important;
+        padding: 10px 14px !important;
+        border-radius: 10px !important;
+        min-width: 110px !important;
+        transform: translateY(-8px) !important;
+        box-shadow: 0 5px 14px rgba(0,0,0,0.30) !important;
+    }
+
+    div[data-baseweb="slider"] [role="slider"] {
+        transition: all 0.15s ease-in-out !important;
+    }
+
+    div[data-baseweb="slider"] [role="slider"]:active {
+        width: 25px !important;
+        height: 25px !important;
+        background-color: #18A999 !important;
+        border: 3px solid white !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.30) !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 def money(value: float) -> str:
     return f"£{value:,.0f}"
