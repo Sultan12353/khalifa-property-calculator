@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khalifa Property Investment Calculator</title>
+<style>
+:root{--navy:#17324d;--muted:#6481a1;--teal:#18a99d;--line:#d6e4ec;--bg:#edf5f7;--card:#fff}
+*{box-sizing:border-box} html,body{width:100%;min-height:100%;margin:0}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--navy);overflow-x:hidden}.site-header{width:100%;padding:22px 30px 4px}.site-header h1{margin:0;font-size:32px;font-weight:800;color:var(--navy)}
+.wrap{width:100%;max-width:none;margin:0;padding:16px;display:grid;grid-template-columns:minmax(0,2fr) minmax(340px,1fr);gap:20px}
+.panel{background:#fff;border-radius:28px;padding:30px;box-shadow:0 1px 8px #0000000c}
+h1{font-size:25px;margin:0 0 6px}.sub{color:var(--muted);font-size:17px;margin-bottom:30px;line-height:1.45}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.control{border:1px solid #cfe0ea;border-radius:22px;padding:24px 20px;min-height:142px}
+.labelrow{display:flex;justify-content:space-between;gap:12px;font-weight:700;font-size:18px}
+.value{color:#12647d} input[type=range]{width:100%;margin-top:48px;accent-color:var(--teal)}
+.toggle-row{margin-top:22px;display:flex;justify-content:space-between;align-items:center}
+.small{color:var(--muted);margin-top:8px}.switch{position:relative;width:62px;height:38px}
+.switch input{display:none}.slider{position:absolute;inset:0;background:#cbd9df;border-radius:30px;cursor:pointer}
+.slider:before{content:"";position:absolute;width:28px;height:28px;left:5px;top:5px;background:white;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:var(--teal)}.switch input:checked+.slider:before{transform:translateX(24px)}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:15px}.metric{padding:24px 20px;border-radius:20px;min-height:128px}
+.metric:nth-child(1){background:#e5f2fa}.metric:nth-child(2){background:#daf5ec}.metric:nth-child(3){background:#fff0c7}.metric:nth-child(4){background:#eee6fa}
+.metric .name{color:var(--muted);font-weight:700}.metric .big{font-size:34px;font-weight:800;margin-top:18px}
+.alert{margin:16px 0;background:#fde1e3;border-left:6px solid #df4351;border-radius:18px;padding:20px;font-size:19px;font-weight:800;color:#9a3038}
+.breakdown{margin-top:12px}.row{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #dfe8ed;color:var(--muted);font-size:16px}.row b{color:var(--navy)}
+.progress{height:14px;background:#e3edf2;border-radius:20px;overflow:hidden;margin-top:10px}.bar{height:100%;background:var(--teal);width:0}
+.dual-head{display:grid;grid-template-columns:1fr 1fr;gap:24px}.dual-head>div{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:18px}.dual-sliders{display:grid;grid-template-columns:1fr 1fr;gap:24px}.dual-sliders input{width:100%;margin-top:48px;accent-color:var(--teal)}.dual-sliders input:disabled{opacity:1;cursor:default}.sdlt-box{margin-top:22px;border:1px solid #cfe0ea;border-radius:20px;padding:20px;background:#f9fcfd}
+.sdlt-box h2{font-size:18px;margin:0 0 10px}.sdlt-box p{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
+@media(max-width:900px){.site-header{padding:18px 14px 2px}.site-header h1{font-size:25px}.wrap{grid-template-columns:1fr;padding:10px;gap:14px}.panel{border-radius:18px;padding:18px}.controls{grid-template-columns:1fr}.control{min-height:130px;padding:20px 16px}.dual-head{grid-template-columns:1fr 1fr;gap:14px}.dual-head>div{font-size:16px;flex-direction:column;gap:5px}.dual-sliders{grid-template-columns:1fr 1fr;gap:14px}.results{grid-template-columns:1fr 1fr}.metric{padding:18px 14px;min-height:105px}.metric .big{font-size:25px}}
+@media(max-width:480px){.site-header h1{font-size:23px}.panel h1{font-size:22px}.sub{font-size:15px;margin-bottom:20px}.results{grid-template-columns:1fr 1fr;gap:10px}.metric .name{font-size:13px}.metric .big{font-size:21px}}
+</style>
+</head>
+<body>
+<header class="site-header"><h1>Khalifa Property Dashboard</h1></header>
+<div class="wrap">
+<section class="panel">
+<h1>Deal assumptions</h1>
+<div class="sub">Hold and drag any slider. Its value and the investment result update automatically.</div>
+<div class="controls" id="controls"></div>
+</section>
+
+<aside class="panel">
+<h1>Investment result</h1><div class="sub">Updated automatically from the current assumptions.</div>
+<div class="results">
+<div class="metric"><div class="name">Total project cost</div><div class="big" id="total">£0</div></div>
+<div class="metric"><div class="name">Post-tax profit</div><div class="big" id="profit">£0</div></div>
+<div class="metric"><div class="name">Post-tax ROI</div><div class="big" id="roi">0.0%</div></div>
+<div class="metric"><div class="name">Profit margin</div><div class="big" id="margin">0.0%</div></div>
+</div>
+<div class="alert" id="alert">Add a purchase and selling price</div>
+<div class="breakdown">
+<div class="row"><span>Stamp Duty Land Tax</span><b id="sdlt">£0</b></div>
+<div class="row"><span>Pre-tax profit</span><b id="pretax">£0</b></div>
+<div class="row"><span>Estimated project tax</span><b id="tax">£0</b></div>
+<div class="row"><span>Target selling price</span><b id="target">£0</b></div>
+</div>
+<div class="row" style="border:0;margin-top:12px"><span>ROI progress</span><b id="progressText">0% of target</b></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+</aside>
+</div>
+
+<script>
+const fields=[
+["purchase","Purchase price",0,2000000,5000,0,"money"],
+["reno","Renovation budget",0,500000,2500,0,"money"],
+["buying","Buying costs",0,100000,500,7000,"money"],
+["holding","Holding costs",0,100000,500,3000,"money"],
+["selling","Selling costs",0,100000,500,7000,"money"],
+["sale","Expected selling price",0,3000000,5000,0,"money"],
+["taxPct","Estimated project tax",0,50,1,19,"percent"],
+["targetRoi","Target post-tax ROI",0,50,0.5,15,"percent"]
+];
+const controls=document.getElementById("controls");
+for(const f of fields){
+ const d=document.createElement("div");d.className="control";
+ if(f[0]==="purchase"){
+   d.innerHTML=`<div class="dual-head">
+     <div><span>Purchase price</span><span class="value" id="purchaseVal"></span></div>
+     <div><span>Stamp duty</span><span class="value" id="stampHandleVal">£0</span></div>
+   </div>
+   <div class="dual-sliders">
+     <input type="range" id="purchase" min="${f[2]}" max="${f[3]}" step="${f[4]}" value="${f[5]}">
+     <input type="range" id="stampHandle" min="0" max="250000" step="100" value="0" disabled aria-label="Stamp duty calculated automatically">
+   </div>`;
+ } else {
+   d.innerHTML=`<div class="labelrow"><span>${f[1]}</span><span class="value" id="${f[0]}Val"></span></div>
+   <input type="range" id="${f[0]}" min="${f[2]}" max="${f[3]}" step="${f[4]}" value="${f[5]}">`;
+ }
+ controls.appendChild(d);
+ document.getElementById(f[0]).addEventListener("input",calc);
+}
+const money=n=>(n<0?"-":"")+new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0}).format(Math.abs(n));
+const num=id=>+document.getElementById(id).value;
+
+// Standard residential SDLT bands supplied by the user.
+// Change this constant if the applicable additional-property surcharge changes.
+const ADDITIONAL_SURCHARGE=0.05;
+function sdltStandard(p){
+ let tax=0;
+ const bands=[[125000,0],[250000,.02],[925000,.05],[1500000,.10],[Infinity,.12]];
+ let lower=0;
+ for(const [upper,rate] of bands){
+   const slice=Math.max(0,Math.min(p,upper)-lower);
+   tax+=slice*rate; if(p<=upper) break; lower=upper;
+ }
+ return tax;
+}
+function sdltCalc(p,additional){
+ if(!additional) return sdltStandard(p);
+ // Higher-rate calculation: add surcharge to each standard band.
+ let tax=0, lower=0;
+ const bands=[[125000,0],[250000,.02],[925000,.05],[1500000,.10],[Infinity,.12]];
+ for(const [upper,rate] of bands){
+   const slice=Math.max(0,Math.min(p,upper)-lower);
+   tax+=slice*(rate+ADDITIONAL_SURCHARGE); if(p<=upper) break; lower=upper;
+ }
+ return tax;
+}
+function calc(){
+ for(const f of fields){
+   const v=num(f[0]); document.getElementById(f[0]+"Val").textContent=f[6]==="money"?money(v):v.toFixed(f[4]<1?1:0)+"%";
+ }
+ const purchase=num("purchase"),reno=num("reno"),buying=num("buying"),holding=num("holding"),selling=num("selling"),sale=num("sale");
+ const stamp=sdltCalc(purchase,false);
+ const stampHandle=document.getElementById("stampHandle");
+ stampHandle.max=Math.max(250000,Math.ceil(stamp/1000)*1000);
+ stampHandle.value=stamp;
+ document.getElementById("stampHandleVal").textContent=money(stamp);
+ const total=purchase+reno+buying+holding+selling+stamp;
+ const pretax=sale-total;
+ const tax=Math.max(0,pretax*num("taxPct")/100);
+ const profit=pretax-tax;
+ const roi=total?profit/total*100:0;
+ const margin=sale?profit/sale*100:0;
+ const targetROI=num("targetRoi")/100, taxRate=num("taxPct")/100;
+ const desiredPostTax=total*targetROI;
+ const requiredPretax=taxRate<1?desiredPostTax/(1-taxRate):desiredPostTax;
+ const targetSale=total+requiredPretax;
+ document.getElementById("total").textContent=money(total);
+ document.getElementById("profit").textContent=money(profit);
+ document.getElementById("roi").textContent=roi.toFixed(1)+"%";
+ document.getElementById("margin").textContent=margin.toFixed(1)+"%";
+ document.getElementById("sdlt").textContent=money(stamp);
+ document.getElementById("pretax").textContent=money(pretax);
+ document.getElementById("tax").textContent=money(tax);
+ document.getElementById("target").textContent=money(targetSale);
+ const progress=num("targetRoi")>0?Math.max(0,Math.min(100,roi/num("targetRoi")*100)):0;
+ document.getElementById("bar").style.width=progress+"%";
+ document.getElementById("progressText").textContent=Math.round(progress)+"% of target";
+ document.getElementById("alert").style.display=(purchase===0||sale===0)?"block":"none";
+}
+calc();
+</script>
+</body></html>
